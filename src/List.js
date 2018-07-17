@@ -91,11 +91,11 @@ export default class List extends Component {
         </div>
       )
     })
-    const visibleRange = (function() {
-      const length = available.length
-      if (length === 0) return "无"
-      return `${available[0].index + 1} - ${available[length - 1].index + 1}`
-    })()
+    const length = available.length
+    const visibleRange =
+      length === 0
+        ? "无"
+        : `${available[0].index + 1} - ${available[length - 1].index + 1}`
     return (
       <div className="wrapper">
         <div
