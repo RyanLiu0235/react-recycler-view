@@ -4,34 +4,15 @@ export default class List extends Component {
   constructor() {
     super()
     this.state = {
-      items: Array(50)
-        .fill("grid")
-        .map((item, index) => ({
-          content: `${item} - ${index + 1}`,
-          index
-        })),
-      available: [],
-      page: 0,
-      overscan: 2
+      startIndex: 0,
+      stopIndex: 1
     }
 
     this.scrollHandler = this.scrollHandler.bind(this)
-    this.loadMoreHandler = this.loadMoreHandler.bind(this)
-    this.fetch = this.fetch.bind(this)
   }
 
   componentDidMount() {
     this.setItem()
-  }
-
-  generateItems(page) {
-    const ps = 50
-    return Array(ps)
-      .fill("grid")
-      .map((item, index) => ({
-        content: `${item} - ${index + page * ps + 1}`,
-        index: index + page * ps
-      }))
   }
 
   setItem() {
@@ -39,17 +20,19 @@ export default class List extends Component {
     const rowHeight = 40
 
     const { list, container } = this.refs
-
     const { top: containerTop } = container.getBoundingClientRect()
     const { top: listTop } = list.getBoundingClientRect()
+
+    // 被卷去的个数
     const count = Math.floor(Math.abs(listTop - containerTop) / rowHeight)
-    const overscan = this.state.overscan
+    const { overscan, rowCount } = this.props
+    // 屏幕中可以容纳的items的个数
+    const visibles = Math.ceil(containerHeight / rowHeight)
     this.setState({
-      available: this.state.items.slice(
-        count >= overscan ? count - overscan : count,
-        this.state.items.length >= count + 10 + overscan
-          ? count + 10 + overscan
-          : count + 10
+      startIndex: count >= overscan ? count - overscan : count,
+      stopIndex: Math.min(
+        rowCount, // 防止stopIndex超过目前items个数
+        rowCount >= count + visibles + overscan ? count + visibles + overscan : count + visibles
       )
     })
   }
@@ -58,44 +41,24 @@ export default class List extends Component {
     this.setItem()
   }
 
-  loadMoreHandler() {
-    this.fetch().then(items => {
-      this.setState({
-        items
-      })
-      this.setItem()
-    })
-  }
-
-  fetch() {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const { items, page } = this.state
-        resolve([...items, ...this.generateItems(page + 1)])
-        this.setState({
-          page: page + 1
-        })
-      }, 1000)
-    })
-  }
-
   render() {
-    const { items, overscan, available } = this.state
-    const list = this.state.available.map((item, index) => {
+    const { startIndex, stopIndex } = this.state
+    const { rowRenderer, loadMore, rowCount, overscan } = this.props
+    const list = []
+    console.log(stopIndex)
+    for (let i = startIndex; i < stopIndex; i++) {
       const style = {
-        top: item.index * 40 + "px"
+        top: i * 40 + "px"
       }
-      return (
-        <div className="item" key={item.index} index={item.index} style={style}>
-          {item.content}
-        </div>
+      list.push(
+        this.props.rowRenderer({
+          key: i,
+          style,
+          index: i
+        })
       )
-    })
-    const length = available.length
-    const visibleRange =
-      length === 0
-        ? "无"
-        : `${available[0].index + 1} - ${available[length - 1].index + 1}`
+    }
+
     return (
       <div className="wrapper">
         <div
@@ -106,16 +69,16 @@ export default class List extends Component {
           <div
             className="list"
             style={{
-              height: (items.length + 1) * 40 + 2 + "px"
+              height: (rowCount + 1) * 40 + 2 + "px"
             }}
             ref="list"
           >
             {list}
             <div
               className="item"
-              onClick={this.loadMoreHandler}
+              onClick={loadMore}
               style={{
-                top: items.length * 40 + "px"
+                top: rowCount * 40 + "px"
               }}
             >
               load more
@@ -123,8 +86,8 @@ export default class List extends Component {
           </div>
         </div>
         <div className="dashboard">
-          <p>总共数量：{items.length}个</p>
-          <p>当前渲染：{visibleRange}</p>
+          <p>总共数量：{rowCount}个</p>
+          <p>当前渲染：{`${startIndex + 1} - ${stopIndex + 1}`}</p>
           <p>预先加载：{overscan}个</p>
         </div>
       </div>
