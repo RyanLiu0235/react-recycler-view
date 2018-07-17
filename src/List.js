@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react"
+import { number, func } from "prop-types"
 
 export default class List extends PureComponent {
   constructor() {
@@ -9,6 +10,18 @@ export default class List extends PureComponent {
     }
 
     this.scrollHandler = this.scrollHandler.bind(this)
+  }
+
+  static propTypes = {
+    rowHeight: number.isRequired,
+    overscan: number,
+    rowCount: number.isRequired,
+    rowRenderer: func.isRequired,
+    loadMore: func.isRequired
+  }
+
+  static defaultProps = {
+    rowCount: 2
   }
 
   componentDidMount() {
