@@ -58,6 +58,7 @@ class App extends Component {
     return (
       <div className="App">
         <List
+          rowHeight={40}
           overscan={2}
           rowCount={items.length}
           rowRenderer={rowRenderer}

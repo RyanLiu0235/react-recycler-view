@@ -16,23 +16,23 @@ export default class List extends Component {
   }
 
   setItem() {
-    const containerHeight = 400
-    const rowHeight = 40
-
     const { list, container } = this.refs
+    const { overscan, rowCount, rowHeight } = this.props
+    const { height: containerHeight } = container.getBoundingClientRect()
     const { top: containerTop } = container.getBoundingClientRect()
     const { top: listTop } = list.getBoundingClientRect()
 
     // 被卷去的个数
     const count = Math.floor(Math.abs(listTop - containerTop) / rowHeight)
-    const { overscan, rowCount } = this.props
     // 屏幕中可以容纳的items的个数
     const visibles = Math.ceil(containerHeight / rowHeight)
     this.setState({
       startIndex: count >= overscan ? count - overscan : count,
       stopIndex: Math.min(
         rowCount, // 防止stopIndex超过目前items个数
-        rowCount >= count + visibles + overscan ? count + visibles + overscan : count + visibles
+        rowCount >= count + visibles + overscan
+          ? count + visibles + overscan
+          : count + visibles
       )
     })
   }
@@ -45,7 +45,6 @@ export default class List extends Component {
     const { startIndex, stopIndex } = this.state
     const { rowRenderer, loadMore, rowCount, overscan } = this.props
     const list = []
-    console.log(stopIndex)
     for (let i = startIndex; i < stopIndex; i++) {
       const style = {
         top: i * 40 + "px"
