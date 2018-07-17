@@ -1,6 +1,6 @@
-import React, { Component } from "react"
+import React, { PureComponent } from "react"
 
-export default class List extends Component {
+export default class List extends PureComponent {
   constructor() {
     super()
     this.state = {
@@ -18,6 +18,7 @@ export default class List extends Component {
   setItem() {
     const { list, container } = this.refs
     const { overscan, rowCount, rowHeight } = this.props
+
     const { height: containerHeight } = container.getBoundingClientRect()
     const { top: containerTop } = container.getBoundingClientRect()
     const { top: listTop } = list.getBoundingClientRect()
