@@ -30,7 +30,7 @@ export default class List extends PureComponent {
     this.setState({
       startIndex: count >= overscan ? count - overscan : count,
       stopIndex: Math.min(
-        rowCount, // 防止stopIndex超过目前items个数
+        rowCount - 1, // 防止stopIndex超过目前items个数
         rowCount >= count + visibles + overscan
           ? count + visibles + overscan
           : count + visibles
@@ -46,7 +46,7 @@ export default class List extends PureComponent {
     const { startIndex, stopIndex } = this.state
     const { rowRenderer, loadMore, rowCount, overscan } = this.props
     const list = []
-    for (let i = startIndex; i < stopIndex; i++) {
+    for (let i = startIndex; i <= stopIndex; i++) {
       const style = {
         top: i * 40 + "px"
       }
