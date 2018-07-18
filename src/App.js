@@ -5,7 +5,7 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      items: Array(50000)
+      items: Array(50)
         .fill("grid")
         .map((item, index) => ({
           content: `${item} - ${index + 1}`,
@@ -29,12 +29,13 @@ class App extends Component {
   }
 
   loadMoreRows() {
-    this.fetch().then(data => {
+    return this.fetch().then(data => {
       const { items, page } = this.state
       this.setState({
         page: page + 1,
         items: [...items, ...data]
       })
+      Promise.resolve()
     })
   }
 
