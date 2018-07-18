@@ -25,10 +25,10 @@ export default class List extends PureComponent {
   }
 
   componentDidMount() {
-    this.setItem()
+    this.calculateRange()
   }
 
-  setItem() {
+  calculateRange() {
     const { list, container } = this.refs
     const { overscan, rowCount, rowHeight } = this.props
 
@@ -52,16 +52,16 @@ export default class List extends PureComponent {
   }
 
   scrollHandler() {
-    this.setItem()
+    this.calculateRange()
   }
 
   render() {
     const { startIndex, stopIndex } = this.state
-    const { rowRenderer, loadMore, rowCount, overscan } = this.props
+    const { rowRenderer, loadMore, rowCount, rowHeight, overscan } = this.props
     const list = []
     for (let i = startIndex; i <= stopIndex; i++) {
       const style = {
-        top: i * 40 + "px"
+        top: i * rowHeight + "px"
       }
       list.push(
         this.props.rowRenderer({
@@ -82,7 +82,7 @@ export default class List extends PureComponent {
           <div
             className="list"
             style={{
-              height: (rowCount + 1) * 40 + 2 + "px"
+              height: (rowCount + 1) * rowHeight + 2 + "px"
             }}
             ref="list"
           >
@@ -91,7 +91,7 @@ export default class List extends PureComponent {
               className="item"
               onClick={loadMore}
               style={{
-                top: rowCount * 40 + "px"
+                top: rowCount * rowHeight + "px"
               }}
             >
               load more

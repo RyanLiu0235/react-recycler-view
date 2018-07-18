@@ -5,7 +5,7 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      items: Array(50)
+      items: Array(50000)
         .fill("grid")
         .map((item, index) => ({
           content: `${item} - ${index + 1}`,
@@ -57,6 +57,7 @@ class App extends Component {
     }
     return (
       <div className="App">
+        <h1>react recycler view</h1>
         <List
           rowHeight={40}
           overscan={2}
