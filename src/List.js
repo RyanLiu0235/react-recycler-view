@@ -29,6 +29,10 @@ export default class List extends PureComponent {
     this.calculateRange()
   }
 
+  componentDidUpdate() {
+    this.calculateRange()
+  }
+
   calculateRange() {
     const { list, container } = this.refs
     const { overscan, rowCount, rowHeight, loadMoreRows } = this.props
@@ -56,9 +60,7 @@ export default class List extends PureComponent {
       ) {
         this.setState({ isLoaded: false })
         loadMoreRows().then(() => {
-          this.setState({
-            isLoaded: true
-          })
+          this.setState({ isLoaded: true })
         })
       }
     })
