@@ -14,7 +14,7 @@ class App extends Component {
       page: 0
     }
 
-    this.loadMore = this.loadMore.bind(this)
+    this.loadMoreRows = this.loadMoreRows.bind(this)
     this.fetch = this.fetch.bind(this)
   }
 
@@ -28,7 +28,7 @@ class App extends Component {
       }))
   }
 
-  loadMore() {
+  loadMoreRows() {
     this.fetch().then(data => {
       const { items, page } = this.state
       this.setState({
@@ -63,7 +63,7 @@ class App extends Component {
           overscan={2}
           rowCount={items.length}
           rowRenderer={rowRenderer}
-          loadMore={this.loadMore}
+          loadMoreRows={this.loadMoreRows}
         />
       </div>
     )

@@ -17,7 +17,7 @@ export default class List extends PureComponent {
     overscan: number,
     rowCount: number.isRequired,
     rowRenderer: func.isRequired,
-    loadMore: func.isRequired
+    loadMoreRows: func.isRequired
   }
 
   static defaultProps = {
@@ -57,7 +57,7 @@ export default class List extends PureComponent {
 
   render() {
     const { startIndex, stopIndex } = this.state
-    const { rowRenderer, loadMore, rowCount, rowHeight, overscan } = this.props
+    const { rowRenderer, loadMoreRows, rowCount, rowHeight, overscan } = this.props
     const list = []
     for (let i = startIndex; i <= stopIndex; i++) {
       const style = {
@@ -89,7 +89,7 @@ export default class List extends PureComponent {
             {list}
             <div
               className="item"
-              onClick={loadMore}
+              onClick={loadMoreRows}
               style={{
                 top: rowCount * rowHeight + "px"
               }}
